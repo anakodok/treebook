@@ -4,6 +4,8 @@ source 'http://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 gem 'coffee-script-source', '1.8.0'
+gem 'devise'
+gem 'simple_form'
 # Use mysql as the database for Active Record
 gem 'mysql2'
 # Use SCSS for stylesheets

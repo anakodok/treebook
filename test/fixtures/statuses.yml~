@@ -2,8 +2,6 @@
 
 one:
   content: MyText
-  user: mul
 
 two:
   content: MyText
-  user: mul

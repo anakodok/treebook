@@ -5,16 +5,18 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     match 'register', to: 'devise/registrations#new', via: :all, as: :register
-    match 'profile', to: 'devise/registrations#edit', via: :all, as: :profile
+    match 'change', to: 'devise/registrations#edit', via: :all, as: :change
     match 'login', to: 'devise/sessions#new', via: :all, as: :login
     match 'logout', to: 'devise/sessions#destroy', via: :all, as: :logout
   end
+
+  resources :user_friendships
 
   resources :statuses
   match 'feed', to: 'statuses#index', via: :all, as: :feed
   root to: "statuses#index"
 
-  get "/:id", to: "profiles#show"
+  get "/:id", to: "profiles#show", as: :profile
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

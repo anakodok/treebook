@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :configure_devise_permitted_parameters, if: :devise_controller?
-  before_action :friendship_params
 protected
 
   def configure_devise_permitted_parameters
@@ -20,7 +19,4 @@ protected
     end
   end
 
-  def friendship_params
-    params.require(:user_friendship).permit(:user, :friend, :user_id, :friend_id)
-  end
 end

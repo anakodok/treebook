@@ -6,9 +6,11 @@ gem 'rails', '4.2.0'
 gem 'coffee-script-source', '1.8.0'
 gem 'devise'
 gem 'simple_form'
+gem 'state_machines-activerecord'
 
 group :test do
   gem 'shoulda'
+  gem 'factory_girl_rails'
 end
 # Use mysql as the database for Active Record
 gem 'mysql2'

@@ -4,10 +4,10 @@
   <p>Do you really want to friend <%= @friend.fullname %>?</p>
 
   <%= simple_form_for @user_friendship, method: :post do |f| %>
-    <div class="form form-actions">
-      <%= f.hidden_field :friend_id, value: @friend %>
+    <div class="form form-actions well">
+      <%= f.hidden_field :friend_id, value: @friend.profile_name %>
       <%= f.submit 'Yes, Add Friend', class: "btn btn-info" %>
-      <%= link_to "Cancel", profile_path(@friend), class: 'btn' %>
+      <%= link_to "Cancel", profile_path(@friend), class: 'btn btn-danger' %>
     </div>
   <% end %>
 <% end %>

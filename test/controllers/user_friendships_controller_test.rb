@@ -32,13 +32,13 @@ class UserFriendshipsControllerTest < ActionController::TestCase
       end
       
       should "display pending information on a pending friendship" do
-        assert_select "#user_friendship_#(@friendship1.id)" do
+        assert_select "div#user_friendship_#(@friendship1.id)" do
           assert_select "em", "Friendship is pending."
         end
       end
 
       should "display date information on a accepted friendship" do
-        puts response.body
+        #puts response.body
         assert_select "#user_friendship_#(@friendship2.id)" do
           assert_select "em", "Friendship started #{@friendship2.updated_at}."
         end
@@ -130,6 +130,14 @@ class UserFriendshipsControllerTest < ActionController::TestCase
         end
       end
 
+      context "successfully" do
+        should "create two user friendship objects" do
+          assert_difference "UserFriendship.count", 2 do
+            post :create, user_friendship: { friend_id: users(:gaby) }
+          end
+        end
+      end
+
       context "with a valid friend_id" do
         setup do
           post :create, user_friendship: { friend_id: users(:gaby) }
@@ -157,8 +165,102 @@ class UserFriendshipsControllerTest < ActionController::TestCase
 
         should "set the flash success message" do
           assert flash[:success]
-          assert_equal "You are now friend with #{users(:gaby).fullname}", flash[:success]
+          assert_equal "Friend request sent.", flash[:success]
         end
+      end
+    end
+  end
+  
+  context "#accept" do
+    context "when not logged in" do
+      should "redirect to login page"do
+        put :accept, id: 1
+        assert_response :redirect
+        assert_redirected_to login_path 
+      end
+    end
+    
+    context "when logged in" do
+      setup do
+        @friend = create(:user)
+        @user_friendship = create(:pending_user_friendship, user: users(:mul), friend: @friend)
+        create(:pending_user_friendship, user: @friend, friend: users(:mul))
+        sign_in users(:mul)
+        put :accept, id: @user_friendship
+        @user_friendship.reload
+      end
+      
+      should "assign a user_friendship" do
+        assert assigns(:user_friendship)
+        assert_equal @user_friendship, assigns(:user_friendship)
+      end
+      
+      should "update the state to accepted" do
+        assert_equal "accepted", @user_friendship.state
+      end 
+
+      should "have a flash success message" do
+        assert_equal "You are now friends with #{@user_friendship.friend.fullname}", flash[:success]
+      end 
+    end   
+  end
+  
+  context "#edit" do
+    context "when not logged in" do
+      should "redirect to the login page" do
+        get :edit, id: 1
+        assert_response :redirect
+      end    
+    end
+
+    context "when logged in" do
+      setup do
+        @user_friendship = create(:pending_user_friendship, user: users(:mul))
+        sign_in users(:mul)
+        get :edit, id: @user_friendship
+      end
+      
+      should "get edit and return success" do
+        assert_response :success
+      end
+      
+      should "assign to user_friendship" do
+        assert assigns(:user_friendship)
+      end
+
+      should "assign to friend" do
+        assert assigns(:friend)
+      end
+    end
+  end
+
+  context "#destroy" do
+    context "when not logged in" do
+      should "redirect to login page"do
+        delete :destroy, id: 1
+        assert_response :redirect
+        assert_redirected_to login_path 
+      end
+    end
+    
+    context "when logged in" do
+      setup do
+        @friend = create(:user)
+        @user_friendship = create(:accepted_user_friendship, friend: @friend, user: users(:mul))
+        create(:accepted_user_friendship, friend: users(:mul), user: @friend)
+        
+        sign_in users(:mul)
+      end
+      
+      should "delete user friendships" do
+        assert_difference "UserFriendship.count", -2 do
+          delete :destroy, id: @user_friendship
+        end        
+      end
+
+      should "set the flash" do
+        delete :destroy, id: @user_friendship
+        assert_equal "Friendship destroyed", flash[:success]
       end
     end
   end

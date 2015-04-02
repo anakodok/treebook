@@ -7,6 +7,7 @@ gem 'coffee-script-source', '1.8.0'
 gem 'devise'
 gem 'simple_form'
 gem 'state_machines-activerecord'
+gem 'draper'
 
 group :test do
   gem 'shoulda'

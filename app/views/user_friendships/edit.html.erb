@@ -1,0 +1,20 @@
+<div class="page-header">
+  <h1>Viewing Friendship</h1>
+</div>
+
+<h3><%= @user_friendship.sub_message %></h3>
+
+<div class="form-actions well">
+  <% if @user_friendship.requested? %>
+    <%= simple_form_for(@user_friendship, url: accept_user_friendship_path(@user_friendship),
+                        method: :put) do |f| %>
+      <%= f.submit "Accept Friendship", class: 'btn btn-success' %>
+    <% end %>
+  <% end %>
+
+  <%= simple_form_for(@user_friendship, url: user_friendship_path(@user_friendship),
+                      method: :delete) do |f| %>
+    <%= f.submit "Unfriend", class: 'btn btn-danger' %>
+  <% end %>
+
+</div>
